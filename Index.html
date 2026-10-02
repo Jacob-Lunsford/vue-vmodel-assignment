@@ -1,0 +1,112 @@
+<!-- 
+  Authur: Jacob Lunsford
+  Date: 09/18/2026
+  Program: V-model
+  Description: Lets you type HTML and preview it
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>V-Model</title>
+
+  <!-- Vue + Bulma -->
+  <script src="https://unpkg.com/vue@3"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+ <!-- Style settings -->
+  <style>
+    body {
+      background-color: #f5f5f5;
+      padding: 4rem;
+    }
+
+    .input-area {
+      margin-bottom: 1rem;
+      font-family: monospace;
+      min-height: 200px;
+      background-color: #fefefe;
+      border: 1px solid #ccc;
+    }
+
+    .preview-box {
+      background: white;
+      padding: 1rem;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <section class="section">
+      <div class="container">
+
+        <!-- header -->
+        <h1 class="title has-text-primary">V-Model</h1>
+
+        <!-- edit/preview button -->
+        <div class="buttons">
+          <button class="button is-primary" @click="showPreview = !showPreview">
+            {{ showPreview ? 'Edit HTML' : 'Show Preview' }}
+          </button>
+        </div>
+
+        <!-- editor or preview -->
+        <div class="box preview-box">
+          <label class="label">{{ showPreview ? 'Live Preview' : 'Enter HTML Code' }}</label>
+
+          <!-- preview -->
+          <div v-if="showPreview" v-html="htmlCode"></div>
+
+          <!-- editor -->
+          <html-editor
+            v-else
+            v-model="htmlCode"
+          ></html-editor>
+        </div>
+
+        <!-- current output -->
+        <h2 class="title is-4">Current Output:</h2>
+        <div class="box" v-html="htmlCode"></div>
+
+        <!-- Change for GitHub-->
+
+        <h2> GitHub Assignment Change</h2>
+
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /* text box */
+    const HtmlEditor = {
+      props: {
+        modelValue: String
+      },
+      template: `
+        <textarea
+          class="textarea input-area"
+          :value="modelValue"
+          @input="$emit('update:modelValue', $event.target.value)"
+        ></textarea>
+      `
+    };
+
+    const { createApp } = Vue;
+
+    /* main app */
+    createApp({
+      components: {
+        HtmlEditor
+      },
+      data() {
+        return {
+          htmlCode: '<h2>Hello, world!</h2><p>This is live HTML.</p>', 
+          showPreview: false 
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
